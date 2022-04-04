@@ -1,0 +1,1336 @@
+---
+title: "Estatística Computacional"
+author: "André Leite"
+email: "leite@castlab.org"
+ratio: 16x10
+maketitle: false
+output:
+  rmdshower::shower_presentation:
+    self_contained: false
+    katex: true
+    theme: material
+    css: www/styles.css
+    highlight: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, 
+                      warning = FALSE,
+                      message = FALSE,
+                      fig.width  = 8,
+                      fig.height = 4,
+                      fig.cap = '',
+                      fig.align = 'center')
+
+
+options(knitr.table.format = "html") 
+library(leaflet)
+library(knitr)
+library(tidyverse)
+library(haven)
+library(kableExtra)
+library(formattable)
+library(htmltools)
+#library(webshot) # Desnecessário
+library(gm)
+library(kableExtra)
+library(ggrepel)
+library(lubridate)
+library(GGally)
+library(mosaicData)
+library(paletteer)
+library(tidymodels)
+library(fastDummies)
+#library(DescTools) usando apenas uma função
+#library(LogisticDx) usando apenas uma função
+```
+
+
+## { .fullpage  .red}
+
+<h1 class="displayjost">MBA em BI
+<br>
+&amp; ANALYTICS
+</h1>
+<img src="images/analytics2-295x52.png" width='295px'>
+<div class="footcover">
+<p>cin.ufpe.br | `r format(Sys.Date(), "%d de %B de %Y")`</p> 
+</div>
+
+## { .fullpage  .white}
+
+```{r castlab, results='asis'}
+
+HTML('
+<div class="fullpage height"> 
+<img src="images/castlab.png">
+</div>
+')
+```
+
+## Roteiro
+
+<div class = 'dado' style="padding-left:30px">
+1. Dados e distribuições amostrais
+1. Testes de significância
+1. Regressão e previsão
+1. Projetos
+</div>
+
+## Referências
+
+<div class="row _milk">
+<div class="column_milk">
+<img src="images/epsd.png"  style="width:100%">
+</div>
+<div class="column_milk">
+<img src="images/psds.png"  style="width:100%">
+</div>
+</div>
+
+<!-- https://drive.google.com/file/d/12LdomOcZJFofmLC2SycTgpdj4Bx1-h_B/view?usp=sharing -->
+
+<!-- https://drive.google.com/file/d/1GzhfHt7VmnypRyuAf7JxHvGE6wGUxrFa/view?usp=sharing -->
+
+
+<!-- ##  { .fullpage  .white} -->
+
+<!-- <div class = 'text'> -->
+<!-- > "Because maintenance is so important and so expensive, write programs as if the most important communication they do is not to the computer that executes them but to the human beings who will read and maintain the source code in the future (including yourself)."  -->
+
+<!-- --- **Eric Steven Raymond**. The Art of Unix Programming. 2003. -->
+<!-- </div> -->
+
+
+
+## {.fullpage .grad}
+
+<div class="topic">
+Olist
+</div>
+
+## Desafio
+
+>>  Teste prático para os candidatos ao processo seletivo de **cientistas**, **analistas** e **engenheiros de dados** para o time de Business Science & Analytics do olist
+
+Fonte: https://github.com/olist/work-at-olist-data
+
+```{r project, results='asis', echo=FALSE, eval=FALSE}
+
+webshot::webshot("https://www.olist.com/", "images/olist.png", cliprect = "viewport", delay = 10)
+ 
+```
+
+<div> 
+<img src="images/olist.com.png" width=100%">
+</div>
+
+
+
+
+
+## Cenário
+
+<div class = 'text' style="padding-left:30px">
+*O __olist__ é a maior loja de departamentos dos marketplaces. Possui um catálogo com mais de 950 mil produtos, centenas de milhares de pedidos e uma rede de mais de 9 mil lojistas parceiros espalhados por todas as regiões do Brasil. Entendemos que a área de dados e inteligência é uma das principais alavancas de crescimento do negócio, por isso buscamos profissionais apaixonados por dados para integrar a nossa equipe de Business Science e Analytics (BSA).*
+
+*Estamos o tempo todo gerando dados, dados e muito mais dados. Nosso cenário é de big data!*
+</div>
+
+## Banco de dados
+
+<div> 
+<img src="images/olist_schema.png" width=100%">
+</div>
+
+## Plataforma de e-commerce
+
+<div> 
+<img src="images/olist_example.png" width=100%">
+</div>
+
+## Desafio
+
+<div class = 'dado_full_width'>
+- Será que nossos diferentes lojistas associados conseguem manter o preço do mesmo produto sem grandes discrepâncias?
+- Existe diferença no valor do frete praticado em regiões/cidades diferentes? Ou podemos aplicar as mesmas regras de subsídio de frete para qualquer localidade?
+- Será que nosso catálogo de produtos é abrangente? Ou tem foco em categorias 
+- Será que nosso catálogo de produtos é abrangente? Ou tem foco em categorias específicas?
+- Será que sempre vendemos os mesmos produtos? Ou existem sazonalidades?
+- Será que existe um modelo preditivo para nos preparar para o futuro?
+- Será que o atual banco de dados vai suportar o nosso crescimento? Ou existe uma opção mais escalável?
+</div>
+
+## Cientista de dados
+
+
+<div class = 'dado_full_width'>
+
+- Que tal uma análise textual dos clientes que deixaram comentários sobre suas compras?
+- Alguns clientes não escreveram um comentário. Mas por que eles estão satisfeitos?
+- Com as informações da data de compra, você poderá prever vendas futuras!
+- Você também poderá focar na logística e encontrar maneiras de otimizar os tempos de entrega.
+- Esses dados possuem coordenadas de geolocalização. Há diferenças no padrão de consumo por regiões?
+- Divirta-se descobrindo as categorias de produtos mais propensas à insatisfação do cliente.
+- Crie recursos deste rico conjunto de dados, feature engineering ou anexe algumas informações públicas externas a ele.
+- E um modelo para precificar os produtos do nosso catálogo? Modelagem matemática para otimizar rotas? Testes de hipóteses para validar algum questionamento?
+</div>
+
+## Analista de dados e Business Intelligence
+<div class = 'dado_full_width'>
+- Pense em alguns KPIs para monitoramento. Talvez outros para direcionamento dos gestores!
+- Um cruzamento dos dados poderia gerar relatórios interessantes. Afinal, quem são os Top 10 em vendas? Que tipo produtos eles vendem? Qual é o impacto deles para o negócio?
+- Que tal realizar uma análise exploratória dos dados. E então? Algo lhe chama a atenção?
+- Você poderia apresentar esses dados em um dashboard. Isso daria agilidade na tomada de decisão!
+- Temos interesse em suas habilidades com matemática aplicada e estatística descritiva. O que você pode nos mostrar com os dados?
+</div>
+
+## Engenheiro(a) de dados (1/2)
+
+<div class = 'dado_full_width'>
+- Gostaríamos de analisar suas habilidades com SQL, modelagem dimensional e integração de dados. Mostre seus conhecimento em processos de ETL e conceitos de Data Warehouse. Que tal replicar nossos datasets, remodelar em um banco de dados e apresentar as melhorias realizadas em sua criação.
+- É possível utilizar o modelo proposto em um ambiente cloud? Quais plataformas ou serviços você utilizaria? Quais as vantagens do modelo escolhido em questões de performance?
+- Alguns membros do time dizem que a atual modelagem do banco de dados é adequada para o uso dos cientistas de dados e analistas de BI, porém, outros dizem que existem formas de modelar bancos de dados que trarão mais eficiência. Qual é a sua opinião sobre isso?
+- Estamos preocupados com o vertiginoso aumento do volume em nosso banco de dados atual? Você consideraria uma opção mais escalável ou devemos manter a estrutura existente?
+- Nossa ferramenta de visualização de dashboards está lenta e o nosso time detectou que o problema está na infraestrutura de dados. Como você abordaria esta situação do ponto vista de arquitetura de dados?
+</div>
+
+## Engenheiro(a) de dados (2/2)
+
+<div class = 'dado_full_width'>
+- Nosso banco de dados está hospedado na nuvem e nossas ferramentas de análise de dados são "on premisses". Você manteria este arranjo ou faria mudanças visando mais performance?
+- Nossa área operacional necessita de informações em tempo real, porém os diretores da empresa, que acompanham somente informações de KPIs mensais, alegam que isso é desnecessário e acarretaria custos. Qual é o seu posicionamento sobre isso?
+- Nosso time que está focado em Governança de Dados alega que documentar os processos é mais importante do que refatorar os mais de 500 scripts que estão funcionando com lentidão. Como você atuaria neste impasse, se tivesse que priorizar o trabalho?
+- Aqui no olist, somos muito mão na massa! Como Engenheiro(a) de dados, mostre pra gente o que você consegue fazer na prática com esse nosso banco de dados. (Sabemos que é uma amostra, mas imagine que o todo pode ser petabytes de dados)
+</div>
+
+## O que esperamos do candidato?
+
+<div class = 'dado_full_width'>
+- O que acha de escrever um **relatório** ou **slides** sobre a sua abordagem na solução de alguns desses problemas?
+- Fique livre para **criar sua própria abordagem**, caso considere que as dicas anteriores não sejam pertinentes.
+- **Fique a vontade para adotar softwares, processos e ferramentas que considerar adequados.**
+- Pode ser em **qualquer formato**, queremos apenas entender como você **apresenta os resultados do seu trabalho.**
+- Não esqueça de indicar em seu relatório os **links/endereços**, caso tenha hospedado códigos/arquivos em algum **repositório na internet**.
+</div>
+
+## Dados Aleatórios
+
+- **86%** dos candidatos aprovados resolveram este desafio em **4 dias**
+- **78%** dos **Engenheiros de Dados** aprovados fizeram algum tipo de implementação em **cloud**.
+- **81%** dos candidatos aprovados apresentaram  um **relatório claro, objetivo e coeso.**
+- **Tableu** foi a ferramenta preferida pelos **Analistas de Dados e BI** aprovados.
+- **R**, **Julia** e **Python** foram as preferidas dos **Cientistas de Dados** aprovados.
+
+## Descrição dos dados
+
+<div class = 'dado_full_width'>
+- olist_orders_dataset 
+- olist_order_items_dataset 
+- olist_order_reviews_dataset 
+- olist_products_dataset 
+- olist_order_payments_dataset 
+- olist_customers_dataset 
+- olist_geolocation_dataset 
+- olist_sellers_dataset 
+</div>
+
+
+## {.fullpage .grad}
+
+<div class="topic">
+Análise exploratória
+</div>
+
+
+## Leitura dos dados
+
+```{r leitura, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out"}
+orders <- read_csv("data/olist/olist_orders_dataset.csv") # spec(orders)
+customers <- read_csv("data/olist/olist_customers_dataset.csv", col_types = cols(.default = "c"))
+order_reviews <- read_csv("data/olist/olist_order_reviews_dataset_clean.csv", col_types = cols(.default = "c"))
+order_payments <- read_csv("data/olist/olist_order_payments_dataset.csv")
+order_items_details <- read_csv("data/olist/olist_order_items_dataset.csv")
+sellers <- read_csv("data/olist/olist_sellers_dataset.csv", col_types = cols(.default = "c"))
+geolocation <- read_csv("data/olist/olist_geolocation_dataset.csv")
+products <- read_csv("data/olist/olist_products_dataset.csv")
+```
+
+<div class = 'dado_full_width'>
+```
+read_csv(
+  file,
+  col_names = TRUE,
+  col_types = NULL,
+  col_select = NULL,
+  id = NULL,
+  locale = default_locale(),
+  na = c("", "NA"),
+  quoted_na = TRUE,
+  quote = "\"",
+  comment = "",
+  trim_ws = TRUE,
+  skip = 0,
+  n_max = Inf,
+  guess_max = min(1000, n_max),
+  name_repair = "unique",
+  num_threads = readr_threads(),
+  progress = show_progress(),
+  show_col_types = should_show_types(),
+  skip_empty_rows = TRUE,
+  lazy = should_read_lazy()
+)
+```
+</div>
+
+## Variáveis por base
+
+```{r variables, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out"}
+variables <- tibble(order = paste(names(orders), collapse = ", "), 
+       customers = paste(names(customers), collapse = ", "), 
+       order_reviews = paste(names(order_reviews), collapse = ", "), 
+       order_payments = paste(names(order_payments), collapse = ", "), 
+       order_items_details = paste(names(order_items_details), collapse = ", "), 
+       sellers = paste(names(sellers), collapse = ", "), 
+       geolocation = paste(names(geolocation), collapse = ", "),
+       products = paste(names(products), collapse = ", "), 
+       ) %>% 
+  pivot_longer(everything(), names_to = "Dataset", values_to = "Variables")
+
+# Formatação para o Rmarkdown
+variables %>% 
+  kbl(align='ll') %>% 
+  kable_classic_2() %>% 
+  #kable_paper() %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>% 
+  kable_styling(full_width = FALSE, font_size = 10)  
+```
+
+
+## Número de compras por estado
+
+```{r compras_estato, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out"}
+orders %>%  filter(order_status == 'delivered') %>% 
+  left_join(customers, by = "customer_id") %>% 
+  count(customer_state) %>% 
+  mutate(percentagem = paste(c(round(100*n/sum(n), 1)), "%"), sep = "") %>% 
+  ggplot(aes(x = reorder(customer_state, n), y = n, fill = customer_state)) + 
+  geom_col() +  coord_flip() + theme_minimal()  + guides(fill = 'none') + 
+  geom_text(aes(label = percentagem), hjust = -0.2, size = 3) +
+  labs(y = 'Número de compras', x = 'Estado do comprador')
+```
+
+## Receita de compras por estado
+
+```{r receita_estato, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out"}
+orders %>%  filter(order_status == 'delivered') %>% 
+  left_join(customers, by = "customer_id") %>% 
+  left_join(order_payments, by = "order_id") %>% 
+  group_by(customer_state) %>% 
+  summarise(total = sum(payment_value, na.rm = TRUE)/1e6) %>% 
+  mutate(percentagem = paste(round(100*total/sum(total),1), '%', sep = "")) %>% 
+  ggplot(aes(x = reorder(customer_state, total), y = total, fill = customer_state)) + 
+  geom_col() +  coord_flip() + theme_minimal()  + guides(fill = 'none') + 
+  geom_text(aes(label = percentagem), hjust = -0.2, size = 3) + expand_limits(y = c(0, 6.1)) +
+  labs(y = 'Receita por Estado (Milhões de reais)', x = 'Estado do comprador')
+```
+
+## Forma de pagamento (Valor)
+
+```{r pagamento, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="80%"}
+
+resumo  <- order_payments %>% group_by(payment_type) %>% 
+  filter(payment_type != "not_defined") %>% 
+  summarise(n = n(), total = sum(payment_value)) %>% 
+  mutate(payment_type = recode(payment_type, 
+                               credit_card = "Cartão de crédito",
+                               boleto = "Boleto", 
+                               debit_card = "Cartão de débido", 
+                               voucher = "Voucher"))
+
+
+resumo %>% 
+  mutate(percentagem = paste(round(100*n/sum(n),1), '%', "\n\r  ~", round(n/1000), " mil", sep = "")) %>% 
+  ggplot(aes(x = reorder(payment_type, n), y = n, fill = payment_type)) + 
+  geom_col() +  coord_flip() + #theme_minimal() + 
+  geom_text(aes(label = percentagem), hjust = -0.2, size = 3) + 
+  expand_limits(y = c(0, 88000)) + guides(fill = "none") +
+  labs(y = 'Número de compras', x = 'Forma de pagamento', fill = "Tipo")
+```
+
+
+## Porma de Pagamento (Receita)
+
+```{r pagamento_valor, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="80%"}
+
+resumo %>% 
+  mutate(percentagem = paste(round(100*total/sum(total),1), '%', "\n\r  ", round(total/1e6, 1), if_else(total > 1e6, " milhões", " milhão"), sep = ""),
+         total = total/1e6) %>% 
+  ggplot(aes(x = reorder(payment_type, total), y = total, fill = payment_type)) + 
+  geom_col() +  coord_flip() + guides(fill = "none") + 
+  geom_text(aes(label = percentagem), hjust = -0.2, size = 3) + expand_limits(y = c(0, 16)) +
+  labs(y = 'Receita em milhões de Reais', x = 'Forma de pagamento', fill = "Tipo")
+
+
+```
+
+## Porma de Pagamento (Valor médio)
+
+```{r pagamento_media, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="80%"}
+
+
+resumo %>% 
+  mutate(media = total/n,
+         label = paste("R$", round(media))) %>% 
+  ggplot(aes(x = reorder(payment_type, media), y = media, fill = payment_type)) + 
+  geom_col() +  coord_flip() + guides(fill = "none") + 
+  geom_text(aes(label = label), hjust = -0.2, size = 3) + expand_limits(y = c(0, 180)) +
+  labs(y = 'Valor médio (Receita/Quantidade)', x = 'Forma de pagamento', fill = "Tipo")
+
+```
+
+
+## Porma de Pagamento (Boxplot)
+
+```{r box, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="80%"}
+order_payments %>% group_by(payment_type) %>% 
+  filter(payment_type != "not_defined") %>% 
+  mutate(payment_type = recode(payment_type, 
+                               credit_card = "Cartão de crédito",
+                               boleto = "Boleto", 
+                               debit_card = "Cartão de débido", 
+                               voucher = "Voucher")) %>% 
+  ggplot(aes(x = payment_type, y = log(payment_value + 1), fill = payment_type)) +
+  geom_boxplot() + guides(fill = "none") + labs(x = "Forma de pagamento", y = "Valor da compra (log)")
+
+```
+
+## Porma de Pagamento (Densidade)
+
+```{r density, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="80%"}
+
+order_payments %>% group_by(payment_type) %>% 
+  filter(payment_type != "not_defined") %>% 
+  mutate(payment_type = recode(payment_type, 
+                               credit_card = "Cartão de crédito",
+                               boleto = "Boleto", 
+                               debit_card = "Cartão de débido", 
+                               voucher = "Voucher")) %>% 
+  ggplot(aes(x = log(payment_value + 1), fill = payment_type)) +
+  geom_density(alpha = .75) + guides(fill = "none") +
+  facet_wrap(~payment_type) + 
+  labs(x = "Valor da compra (log)", y = "Densidade")
+
+```
+
+## Reviews
+
+```{r datasetreviews, echo=TRUE, eval=FALSE, class.source="watch-out"}
+"review_id","order_id","review_score","review_comment_title","review_comment_message","review_creation_date","review_answer_timestamp"
+"c0be072e84b9f32bec3f677a99e412b6","0d6f62563638954592b0be58407a367a",2,,,2017-12-02 00:00:00,2017-12-03 01:32:44
+"94164c06576fe53d95ebc58a2cd623bd","7144e3464cff785210679dc9bf9b30ef",5,,baratheon baratheon eu compro a mais de 20 anos anos baratheon eu nunca tive problema nenhum eu recomendo todas as minhas amigas Parabéns baratheon,2017-03-28 00:00:00,2017-03-29 13:07:58
+"f76f4829379a9cc74de8ba1c9b22a650","1c796e58181a405d61b3c861feb64dc1",5,,,2017-08-01 00:00:00,2017-08-03 17:10:23
+"c911eb02e4a4c952b9810a4423fd5769","0df136a9938704f2ee4f14c0661ec032",5,,Show,2017-03-31 00:00:00,2017-04-01 02:35:12
+"387f9786a2a1e00ae0ecad8da2e59530","321b1257cfaf6c0ca8a709d230158920",3,,"Tudo entregue certo, só o tapete que era bem mais claro do que o da foto. Por isso dos 3 pontos ",2017-08-01 00:00:00,2017-08-02 01:43:14
+"7f5131a4c2dc094426e841dbb61512e1","a5da3a396df7ad64a8bba4f78773d557",5,,Muito bom atendimento.,2018-06-21 00:00:00,2018-06-22 02:11:36
+"d7db2538c734369b06f2a2722afc341b","aa0f5120dbd7776eb7289031e22a8329",3,,pedi dois relógios e até agora só recebi um.,2017-12-05 00:00:00,2017-12-09 02:10:08
+"e5fe338f3e0489c6b2213846a3dace71","2cbc5b81184dcc5a9a134f8eecdaa825",5,,sempre gostei de comprar com vocês mas estou chateada pela minha fritadeira que deu problemas e o correio esta em greve e acho que vcs deveriam coletar meu produto e mandar para assistência tecnica.,2017-05-08 00:00:00,2017-05-10 18:55:20
+"10b73c782535c2ca6f5df1188f3785a6","d8734ba226623cf1c86b3cce8cbffa78",1,,"Pessimo atendimento, sem canal de reclamação 
+fornecedor ",2018-03-07 00:00:00,2018-03-07 13:45:39
+"da3ecc7f8c3ec3c9760f8c6dd05a4b35","5d9a4411068892bb475d32879e076e1e",2,,,2017-07-14 00:00:00,2017-07-14 23:09:52
+"552e93fbf1f61cceb9d082c74e199d1b","4bc6bfbf65a140de5b9803eefad6ef41",2,,a loja como sempre entrega no prazo mas o produto nao recomendo ele nao funcionou ate hoje e nao sei onde levar.,2017-05-03 00:00:00,2017-05-07 16:01:46
+"7f03731fce8b745376da2737f31708df","8411e6f64e8ba69af35b400712a77a8b",4,,recebido ,2017-06-03 00:00:00,2017-06-05 10:44:02
+"0f8087f913359425e04d835aa8adb635","ad443a68e64f21acbda949c91bbe9aff",5,,,2017-10-21 00:00:00,2017-10-21 18:13:30
+"bcb1ab9280f56c2a7f2c8c0eae2bb016","ab355d60eb2f7b4ffcd01aab4da8ebef",5,,,2018-05-22 00:00:00,2018-05-24 10:47:20
+"eaf192aa1ca7c6508953ef72f9cb9a4e","4ad158fb23644bc01f7f255b61b7ca9f",5,,,2017-08-17 00:00:00,2017-08-18 00:23:38
+"529954c99786e0971465081899304a5c","b19c9babb9e3821296dbd532f9adb5e9",5,,,2017-12-09 00:00:00,2017-12-10 01:00:26
+"37e7db51703ab6442592bc0b7dc32f08","bdd19e1d8bec46c29644018d2c781aef",5,,Ótimo cobertor; e lindo; excelente qualidade; comprei 1 p mim; dei 1 p minha mãe; e p minha tia; mto confortável e quente. Entregue antes do prazo. Mto satisfeita. ,2018-03-06 00:00:00,2018-03-07 12:21:13
+"1f2d3b9d27556265b01c36877334bf44","a558d36bc6548afd19f3cf6728bf7077",4,****,O produto foi entregue rápido.,2018-06-24 00:00:00,2018-06-24 21:14:46
+"efc449134506faf9943d10dfa04f8b6b","99486f7a6b9b7e8b96cfbb4e3427bd28",4,,,2017-06-06 00:00:00,2017-06-06 23:36:10
+"22a94effc258ada7e46bc1771816cb66","fd3dec101097b7fd62ae62c0e627f70a",5,,,2017-12-15 00:00:00,2017-12-16 01:40:12
+"755df8bd9de2206b647e2b1f64be8d13","b1746c7d13f52567b4cd6710249240c9",5,,material excelente alticima qulidade otimo,2017-07-19 00:00:00,2017-07-20 10:57:59
+"6302e2ca50a3646e1718b7278668c3d2","2b0a897dec5e098d39a6aad719ed97a9",5,Bom,Tudo certo,2018-07-22 00:00:00,2018-07-25 00:00:15
+"275555b3a036d498ed76a00b18a5b3c1","b862519c16da1f1abeacf50d35c11f9b",5,,,2017-10-24 00:00:00,2017-10-24 20:01:00
+"c83ed955f6aba3d705f348e8f109c216","098fd8628d7e76c7dfb58d651899ff39",5,,,2017-10-19 00:00:00,2017-10-19 23:26:56
+"d71cb0cddaf18b83dd5df044dd181e9c","4bad08b56f16face64a87351f339d728",4,Óculos e um pouco ,"Óculos e um pouco fino a armação.
+Mais o mesmo na loja onde fui ver estava R$380,00
+Então estou no lucro a empresa entregou no prazo.
+",2018-05-18 00:00:00,2018-05-22 19:53:20
+```
+
+```{r datasetreviews_problem, echo=TRUE, eval=FALSE, class.source="watch-out"}
+37e7db51703ab6442592bc0b7dc32f08,bdd19e1d8bec46c29644018d2c781aef,5,,Ótimo cobertor, e lindo, excelente qualidade, comprei 1 p mim, dei 1 p minha mãe, e p minha tia, mto confortável e quente. Entregue antes do prazo. Mto satisfeita. ,2018-03-06 00:00:00,2018-03-07 12:21:13
+
+```
+
+
+## Reviews
+
+```{r reviews, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="80%"}
+order_reviews %>% 
+  #mutate(review_score = as.integer(review_score)) %>% 
+  group_by(review_score) %>% 
+  summarise(n = n()) %>% 
+  mutate(perc = n/sum(n), 
+         label = paste0(round(100*perc, 1), "%")) %>% 
+  ggplot(aes(x = review_score, y = n, fill = review_score)) + 
+  geom_col() +  #coord_flip() + #theme_minimal() + 
+  scale_fill_brewer(palette="RdYlGn") +
+  geom_text(aes(label = label), vjust = -0.2, size = 3) + 
+  #expand_limits(y = c(0, 88000)) + 
+  guides(fill = "none") +
+  labs(x = 'Review Score', y = 'Quantidade')
+```
+
+
+## Séries histórica de vendas
+
+```{r serievendas2, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out"}
+orders %>% 
+  mutate(data = as_date(order_purchase_timestamp)) %>% 
+  filter(order_status == 'delivered') %>% 
+  select(order_id, data) %>% 
+  left_join(order_payments, by = "order_id") %>%
+  filter(!is.na(payment_value)) %>% 
+  group_by(data) %>% 
+  summarise(n = n(), receita = sum(payment_value, na.rm = TRUE)) %>% 
+  ggplot(aes(x = data, y = n)) + geom_point(alpha = .5) +
+  geom_smooth(method = 'loess', formula = 'y ~ x') +
+  labs(y = "Quantidade", x = "Data") +
+  scale_x_date(date_breaks = "4 months", date_labels = "%Y %b") 
+```
+
+
+
+## Séries histórica de vendas
+
+```{r serievendas2018, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out"}
+orders %>% 
+  mutate(data = as_date(order_purchase_timestamp)) %>% 
+  filter(order_status == 'delivered') %>% 
+  select(order_id, data) %>% 
+  left_join(order_payments, by = "order_id") %>%
+  filter(!is.na(payment_value), year(data) == 2018) %>% 
+  group_by(data) %>% 
+  summarise(n = n(), receita = sum(payment_value, na.rm = TRUE)) %>% 
+  ggplot(aes(x = data, y = n)) + geom_line(color = 'steelblue') + geom_point(alpha = .5) + 
+  geom_smooth(method = 'loess', formula = 'y ~ x') +
+  labs(y = "Quantidade", x = "Data") +
+  scale_x_date(date_breaks = "2 months", date_labels = "%Y %b") 
+```
+
+
+## Séries histórica de vendas
+
+```{r serievendas2018fds, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out"}
+orders %>% mutate(data = as_date(order_purchase_timestamp)) %>% 
+  filter(order_status == 'delivered') %>% select(order_id, data) %>% 
+  left_join(order_payments, by = "order_id") %>% filter(!is.na(payment_value)) %>% 
+  group_by(data) %>% summarise(n = n(), receita = sum(payment_value, na.rm = TRUE)) %>% 
+  mutate(dia = wday(data, week_start = 1), fim_de_semana = if_else(dia >= 6, 'Sim', 'Não')) %>% 
+  filter(year(data) == 2018) %>% ggplot(aes(x = data, y = n)) + theme_bw() +  
+  geom_line(color = gray(.75)) + geom_point(aes(color = fim_de_semana), size = 1.5) + 
+  geom_smooth(aes(color = fim_de_semana), method = 'loess', formula = 'y ~ x', se = FALSE) + 
+  labs(y = "Quantidade", x = "Data", color = 'Fim de semana') +
+  scale_x_date(date_breaks = "2 months", date_labels = "%Y %b") + theme(legend.position = 'top')
+```
+
+
+## Séries histórica de vendas
+
+```{r serievendas, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out"}
+orders %>% 
+  mutate(data = as_date(order_purchase_timestamp)) %>% 
+  filter(order_status == 'delivered') %>% 
+  select(order_id, data) %>% 
+  left_join(order_payments, by = "order_id") %>%
+  filter(!is.na(payment_value)) %>% 
+  group_by(data) %>% 
+  summarise(n = n(), receita = sum(payment_value, na.rm = TRUE)) %>% 
+  ggplot(aes(x = data, y = receita)) + geom_point(alpha = .5) +
+  geom_smooth(method = 'loess', formula = 'y ~ x') +
+  labs(y = "Quantidade", x = "Data") +
+  scale_x_date(date_breaks = "4 months", date_labels = "%Y %b") 
+```
+
+## Séries histórica de vendas (2018, por região)
+
+```{r reviewsRgs, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="80%"}
+orders %>% 
+  mutate(data = as_date(order_purchase_timestamp)) %>% filter(order_status == 'delivered') %>% 
+  left_join(order_payments, by = "order_id") %>% left_join(customers, by = "customer_id") %>% 
+  filter(year(data) == 2018) %>% select(order_id,  estado = customer_state, customer_id, data, payment_value) %>% 
+  mutate(Região = recode(estado, SP = "Sudeste", MG = "Sudeste", ES = 'Sudeste', RJ = 'Sudeste', GO = "Centro-Oeste", MT = "Centro-Oeste", DF = "Centro-Oeste", MS = "Centro-Oeste", AC = "Norte", AM = "Norte", RR = "Norte", AP = "Norte", PA = "Norte", RO = "Norte", TO = "Norte", AL = "Nordeste", BA = "Nordeste", CE = "Nordeste", MA = "Nordeste", PI = "Nordeste", PE = "Nordeste", PB = "Nordeste", RN = "Nordeste", SE = "Nordeste", PR = "Sul", RS = "Sul", SC = "Sul")) %>% 
+  group_by(data, Região) %>%   summarise(n = n(), receita = sum(payment_value, na.rm = TRUE), .groups = "drop") %>% 
+  ggplot(aes(x = data, y = receita)) + geom_point(alpha = .5) +labs(y = "Quantidade", x = "Data") +
+  theme_bw() + scale_x_date(date_breaks = "4 months", date_labels = "%Y %b") + 
+  facet_wrap(~Região, scales = "free_y")
+```
+
+## {.fullpage .grad2}
+
+<div class="topic">
+Modelos Preditivos
+</div>
+
+## {.fullpage .grad}
+
+<div class="topic">
+Regressão Linear
+</div>
+
+## Regressão Linear 
+
+<div class = 'dado_full_width'>
+
+A premissa fundamental de modelagem de dados é tornar explicita a relação entre:
+
+
+- Uma **variável resposta** $y$, também chamada **variável dependente**, de saída ou variável resultado.
+- Umaan **variável explicativa ou preditor** $x$, também chamada **variável independente**, de entrada ou covariável. 
+
+
+De forma mais matemática, queremos modelar uma variável resposta $y$ *"como uma função"* de uma variável explicativa $x$, i.e., 
+$$
+y = f(x)
+$$
+</div>
+
+## Modelagem de dados
+
+<div class = 'dado_full_width'>
+
+Podemos dizer que modelagem de dados serve a dois propósitos:
+
+**Modelagem para explanação**: quando queremos descrever explicitamente e quantificar a relação entre a variável resposta e a variável explicativa, determinando a significância entre quaisquer relaçoes, contruir medidas de resumo dessas relações e possivelmente identificar relações *causais* entre as variáveis. 
+
+**Modelatem para predição**: Quando queremos prever uma variável resposta baseado na informação contida em um conjunto de variáveis explicativas. Ao contrário de modelagem para explanação, não temos muito interesse em entender como as variáveis interagem entre si, apenas se podemos ou não realizar boas predições.
+</div>
+
+## Regressão Linear, origens e intuição
+
+<div class = 'dado_full_width'>
+> [...] sons do not tend toward their fathers' heights but instead “regress to” the mean of the population. 
+---  **Sir Francis Galton (1885)**
+</div>
+
+```{r galton, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+# install.packages("mosaicData")
+base <- mosaicData::Galton %>% as_tibble() %>% mutate(midHeight = (father + mother)/2)
+base %>%   ggplot() + theme_minimal() +
+  geom_point(aes(x = midHeight, y = height), alpha = .25) +
+  geom_function(fun = function(x) {y = x}, size = .75) +
+  geom_function(fun = function(x) {y = mean(base$height)}, size = .75, linetype = "dotdash") +
+  geom_smooth(aes(x = midHeight, y = height), method='lm', formula = y~x, se = FALSE, color = "red", linetype = "dashed") +
+  xlab("Altura média dos pais (polegadas)") +
+  ylab("Altura do filho (polegadas)")
+```
+
+## Regressão Linear, origens e intuição
+
+```{r bysex, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out"}
+base %>%   ggplot() + theme_minimal() +
+  geom_point(aes(x = midHeight, y = height, color = sex), alpha = .25) +
+  geom_function(fun = function(x) {y = x}, size = .75) +
+  #geom_function(fun = function(x) {y = mean(base$height)}, size = .75, linetype = "dotdash") +
+  geom_hline(aes(yintercept =  mean_child), linetype = "dotdash", 
+             data = base %>% summarise(mean_child = mean(height))) +
+  geom_smooth(aes(x = midHeight, y = height, color = sex), 
+              method='lm', formula = y ~ x, se = FALSE, linetype = "dashed") +
+  labs(x = "Altura média dos pais (polegadas)", y = "Altura do filho (polegadas)", color = "Sexo") +
+  scale_color_paletteer_d(`"ggthemes::wsj_red_green"`) 
+```
+
+## Regressão Linear Simples
+<div class = 'dado_full_width'>
+Suponha que nossa variável independente seja $x$ e $y$ nossa variável resposta ou dependente. A equaçao de uma reta, ja que assumimos que a relação é linear, esperamos que a interação seja da forma:
+
+$$y = m\cdot x + c$$
+
+Em que $m$ representa a inclinação (ou gradiente) da linha e $c$ o intercepto, ponto em que a reta encontra o eixo $y$. Chamamos $m$ e $c$ de **coeficientes** do modelo.
+</div>
+
+## Regressão Linear Simples
+
+<div class = 'dado_full_width'>
+Por exemplo, vamos selecionar uma amostra de 10 observações da base de dado de Galton:
+</div>
+
+```{r galton_sample, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out"}
+set.seed(123456) # para reprodutibilidade
+base_amostra <- base %>% sample_n(10)
+base_amostra %>% kbl(align='cllclll') %>% 
+  kable_classic_2() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>% 
+  kable_styling(full_width = FALSE, font_size = 10)  
+```
+
+
+## Regressão Linear Simples
+
+<div class = 'dado_full_width'>
+Como Galton, vamos escolher a altura do filho,  variável `height` como variável resposta $y$ e `midHeight` como variável explicativa $x$. Podemos fazer o gráfico entre estas duas variáveis:
+</div>
+
+```{r galton_sample_plot_2, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+base_amostra %>% ggplot() + theme_minimal() + geom_point(aes(x = midHeight, y = height), ) +
+  labs(x = "Altura média dos pais (polegadas)", y = "Altura do filho (polegadas)") 
+```
+
+## Regressão Linear Simples
+
+<div class = 'dado_full_width'>
+Como Galton, vamos escolher a altura do filho,  variável `height`, como variável resposta $y$ e `midHeight` como variável explicativa $x$. Podemos fazer o gráfico entre estas duas variáveis:
+</div>
+
+```{r galton_sample_plot, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+base_amostra %>%   ggplot() + theme_minimal() +
+  geom_point(aes(x = midHeight, y = height), ) +
+  labs(x = "Altura média dos pais (polegadas)", y = "Altura do filho (polegadas)")  + 
+  geom_abline(slope = 1.3, intercept = -23, color = "red", size = .75) + 
+  ggplot2::annotate("text", x = 69, y = 65, label = "y = 1.3x - 23", colour = "red")
+```
+
+## Erros ou Resíduos
+
+```{r galton_sample_plot2, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+base_amostra %>%   
+  select(height, midHeight) %>% 
+  mutate(height_hat = midHeight*1.3 - 23,
+         error = height - height_hat, 
+         upper = if_else(error > 0, height, height_hat),
+         lower = if_else(error > 0, height_hat, height)) %>% 
+  ggplot() + theme_minimal() +
+  geom_linerange(aes(x = midHeight, ymin = lower, ymax = upper), linetype = 3, color = "red") +
+  geom_point(aes(x = midHeight, y = height)) + 
+  geom_point(aes(x = midHeight, y = height_hat), color = "red") + 
+  labs(x = "Altura média dos pais (polegadas)", y = "Altura do filho (polegadas)")  + 
+  geom_abline(slope = 1.3, intercept = -23, color = "red", size = .75) 
+
+```
+
+## Erros ou Resíduos 
+
+```{r galton_sample_plot3, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+base_amostra %>%   
+  select(height, midHeight) %>% 
+  mutate(height_hat = midHeight*1.3 - 23, error = height - height_hat,  
+         upper = if_else(error > 0, height, height_hat),
+         lower = if_else(error > 0, height_hat, height)) %>% 
+  ggplot() + theme_minimal() +
+  geom_linerange(aes(x = midHeight, ymin = lower, ymax = upper), linetype = 3, color = "red") +
+  geom_point(aes(x = midHeight, y = height)) + geom_point(aes(x = midHeight, y = height_hat), color = "red") +
+  labs(x = "Altura média dos pais (polegadas)", y = "Altura do filho (polegadas)")  + 
+  geom_abline(slope = 1.3, intercept = -23, color = "red", size = .75)  + 
+  geom_label(aes(x = midHeight, y = height, label = 1:10), vjust = "inward", 
+             hjust = c("inward", "outward", rep("inward", 8)))
+```
+
+## Erros ou Resíduos
+
+```{r galton_sample_error, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out"}
+residuos <- base_amostra %>% select(height, midHeight) %>% 
+  mutate(height_hat = midHeight*1.3 - 23, error = height - height_hat) 
+residuos %>% kbl(align='cllclll') %>%   kable_classic_2() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>% 
+  kable_styling(full_width = FALSE, font_size = 10) %>% 
+  column_spec(4, color = if_else(residuos$error < 0, 'red', 'black'))
+```
+
+## Minimizando o "erro"
+
+<div class = 'dado_full_width'>
+Podemos definir o erro que queremos minimizar de diferentes formas:
+
+- Média dos resíduos 
+- Média dos valores absolutos dos resíduos (de modo a deixar todos positivos)
+- **Média dos quadrados dos resíduos** (novamente tornando os resíduos positivos)
+
+Se chamamos $\hat{y}_i$ o valor estimado pelo modelo linear para o ponto $x_i$, themos que
+  $$
+  \hat{y} = m\cdot x_i + c
+  $$
+e 
+
+$$
+e_i = y_i - \hat{y}_i
+$$
+De forma que
+<div>
+
+$$
+\bar{e}(m,\ c) = \frac{1}{n}\sum_{i = 1}^{n} (y_i - \hat{y}_i)^2  = \frac{1}{n}\sum_{i = 1}^{n} [y_i - (m\cdot x_i + c)]^2
+$$
+
+## Estimando o melhor ajuste no `R`
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+modelo_linear <- lm(height ~ midHeight, data = base_amostra)
+modelo_linear %>% tidy() %>% 
+  mutate(across(where(is.numeric), ~ round(.x, 3))) %>%  
+  kbl() %>% kable_classic_2() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>% 
+  kable_styling(full_width = FALSE, font_size = 10)    
+```
+
+## Estimando o melhor ajuste no `R`
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+base_amostra %>% select(height, midHeight) %>% 
+  mutate(height_hat = midHeight*1.3 - 23, error = height - height_hat, 
+         upper = if_else(error > 0, height, height_hat),
+         lower = if_else(error > 0, height_hat, height),
+         height_hat_best = midHeight*modelo_linear$coefficients["midHeight"] + 
+           modelo_linear$coefficients["(Intercept)"] , error_best = height - height_hat_best, 
+         upper_best = if_else(error_best > 0, height, height_hat_best),
+         lower_best = if_else(error_best > 0, height_hat_best, height))  %>% 
+  ggplot() + theme_minimal() + 
+  geom_linerange(aes(x = midHeight, ymin = lower, ymax = upper), color = "red") +
+  geom_linerange(aes(x = midHeight, ymin = lower_best, ymax = upper_best), color = "blue") +
+  geom_point(aes(x = midHeight, y = height)) + 
+  geom_point(aes(x = midHeight, y = height_hat_best), color = "blue") +
+  geom_point(aes(x = midHeight, y = height_hat), color = "red") + 
+  labs(x = "Altura média dos pais (polegadas)", y = "Altura do filho (polegadas)")   +
+  geom_abline(slope = 1.3, intercept = -23, color = "red", size = .75, linetype = 2)  + 
+  geom_abline(slope = modelo_linear$coefficients["midHeight"], 
+               intercept = modelo_linear$coefficients["(Intercept)"], color = "blue", 
+               size = .75, linetype = 2) +
+  ggplot2::annotate("text", x = 69, y = 72, label = "Best", colour = "blue") +
+  ggplot2::annotate("segment", x = 69, xend = 69, y = 71.5, yend = 70, 
+                    color = "blue", arrow = arrow(length = unit(2,'mm')))
+```
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+base_amostra %>% select(height, midHeight) %>% 
+  mutate(height_hat = midHeight*1.3 - 23, error = height - height_hat,
+         height_hat_best = midHeight*modelo_linear$coefficients["midHeight"] + 
+           modelo_linear$coefficients["(Intercept)"] , error_best = height - height_hat_best) %>% 
+  summarise(`MSE Red` = sum(error^2), `MSE Blue` = sum(error_best^2)) %>% 
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>%  
+  kbl() %>% kable_classic_2() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>% 
+  kable_styling(full_width = FALSE, font_size = 10)    
+```
+
+## Qualidade do ajuste
+```{r echo=FALSE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+null_model <- base_amostra %>% select(height, midHeight) %>% 
+  mutate(height_hat = mean(height), 
+         error = height - height_hat,
+         upper = if_else(error > 0, height, height_hat),
+         lower = if_else(error > 0, height_hat, height))
+null_model %>%   ggplot() + theme_minimal() + 
+  geom_linerange(aes(x = midHeight, ymin = lower, ymax = upper), color = "red") +
+  geom_point(aes(x = midHeight, y = height)) + 
+  geom_point(aes(x = midHeight, y = height_hat), color = "red") + 
+  labs(x = "Altura média dos pais (polegadas)", y = "Altura do filho (polegadas)")   +
+  geom_abline(slope = 0, intercept =mean(null_model$height), color = "red", size = .75, linetype = 2)   
+
+```
+
+## Coeficiente de Determinação: $R^2$
+
+<div class = 'dado_full_width'>
+O coeficiente de determinação é uma medidade de qualidade de ajuste do modelo. É uma medida estatística de quão bem a predições do modelo de regressão se aproxima dos dados reais. Um $R^2$ igual a $1$ indica que a regressão prevê perfeitamente os dados.
+</div>
+
+$$
+R^2 = \frac{SS_{\text{reg}}}{SS_{\text{total}}} = \frac{\sum_i (\hat{y}_i - \bar{y})^2}{\sum_i (y_i - \bar{y})^2}
+$$
+
+Como $SS_\text{total} = SS_\text{reg} + SS_\text{error}$, $R^2$ também pode ser calculado como
+
+$$
+R^2 = 1 - \frac{SS_{\text{error}}}{SS_{\text{total}}}
+$$
+
+## Coeficiente de Determinação **ajustado**
+
+<div class = 'dado_full_width'>
+
+Na medida que colocamos variáveis no modelo o coeficiente de determinação é inflacionado e pode levar a associações espúrias. O $R^2_{\text{adj}}$ é definido da maneira abaixo para corrigir esse viés.
+
+$$
+R^2_{\text{adj}} = 1 - (1 - R^2)\frac{n - 1}{n - p - 1}
+$$
+
+Em que $n$ é tamanho da amostra e $p$ o número de variáveis explicativas no modelo.
+</div>
+
+
+## Testando as hipóteses do modelo
+
+<div class = 'dado_full_width'>
+Para realizar os testes estatísticos, é considerado que o erro ou resíduo segue uma distribuição estatística particular. Temos que
+
+$$
+Y = \hat{Y} + \varepsilon \qquad \varepsilon \sim N(\mu = 0, \sigma^2)
+$$
+em que a variância $\sigma^2$ é constante. 
+</div>
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+ggplot() + theme_bw() +
+    stat_function(fun = dnorm, n = 101, args = list(mean = 0, sd = 1), size = .75) + 
+    labs(y = "Densidade", x = "Erro") + lims(x = c(-3,3)) 
+```
+
+## Testando as hipóteses do modelo
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+modelo_linear <- lm(height ~ midHeight, data = base) 
+summary(modelo_linear)
+```
+</div>
+
+## Testando as hipóteses do modelo
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+erro  <- base %>% select(height, midHeight) %>% 
+  mutate(resíduos = resid(modelo_linear),
+         ajustado = fitted(modelo_linear))
+
+erro %>% head(n = 20) %>% kbl() %>% kable_classic_2() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>% 
+  kable_styling(full_width = FALSE, font_size = 10) %>% 
+  column_spec(3, color = if_else(erro$resíduos < 0, 'red', 'black'))
+```
+</div>
+
+## Testando as hipóteses do modelo
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+erro %>% 
+    ggplot(aes(x = resíduos, y = ..density..)) + geom_histogram(position = 'identity', color = 'white', bins = 30, fill = 'red', alpha = .2) +
+    geom_density(position = 'identity', size = .75) + theme_bw()
+```
+</div>
+
+## Testando as hipóteses do modelo
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+erro %>% pull(resíduos) %>% nortest::ad.test()
+```
+</div>
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+erro %>% ggplot() + geom_point(aes(x = ajustado, y = resíduos), alpha = .2) +
+  labs(x = "Ajustado", y = "Resíduos") + theme_bw()
+```
+</div>
+
+
+## Predito vs Valores verdadeiros
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+erro %>% ggplot() + 
+  geom_point(aes(x = ajustado, y = height), alpha = .2) +
+  labs(x = "Ajustado", y = "Real") + theme_bw()
+```
+
+## Covariancia e Correlação
+
+<div class = 'dado_full_width'>
+
+A **covariancia** entre duas variáveis é uma medida de impacto mútuo de desvios nas variáveis. Se $\bar{x}$ e $\bar{y}$ são as médias de $x$ e $y$, respectivamente, então a **covariância amostral** de $x$ e $y$ é definida por
+
+$$
+\mathrm{cov}_s(x, y) = \frac{1}{n - 1}\sum_{i = 1}^{n}(x_i - \bar{x})(y_i - \bar{y})
+$$
+O **coeficiente de correlação de Pearson** divide a covariâcia pelo produto dos desvios-padrão das duas variáveis: 
+
+$$
+r_{x, y} = \frac{\mathrm{cov}(x, y)}{\sigma(x)\sigma(y)}
+$$
+
+Isto cria um medida na escala de $-1$ a $1$ para $r_{x, y}$, em que direção e força de associação entre $x$ e $y$ são mais intuitivas de entender:
+
+- $-1$ indica  $x$ aumenta perfeitamente com $y$ diminuindo,
+- $+1$ indica que $x$ aumenta perfeitamente com $y$ aumentando, e
+-  $0$ indica que não existe associação entre as variáveis.
+
+</div>
+
+## Correlação
+
+```{r echo=FALSE, fig.height= 6, fig.width = 6, message=FALSE, warning=FALSE, class.source="watch-out"}
+set.seed(111)
+X <- rep(seq(1, 100, 1), 2)
+Y <- rnorm(200, 100 + X * 10, 10)
+X <- rnorm(800, 100, 5)
+Y[1:200] <- -2000 + 20 * X[1:200] + rnorm(100, 0, 170)
+Y[201:400] <- 400 - 5 * X[201:400] + rnorm(100, 0, 3)
+Y[401:600] <- -600 + rnorm(100, 0, 10)
+Y[601:800] <- 1000 - 16 * X[601:800] + rnorm(100, 0, 190)
+z1 <- rep(c(1, 2), each = 400)
+z2 <- rep(rep(c(1, 2), each = 200), 2)
+
+labels <- tibble(
+  z1 = c(1, 1, 2, 2),
+  z2 = c(1, 2, 1, 2),
+  x = rep(95, 4), 
+  y = c(500, -120, -570, -1100),
+  cor = c(
+    cor(X[1:200], Y[1:200]) %>% round(2),
+    cor(X[201:400], Y[201:400]) %>% round(2),
+    cor(X[401:600], Y[401:600]) %>% round(2),
+    cor(X[601:800], Y[601:800]) %>% round(2))
+  )
+
+tibble(X, Y, z1, z2) %>%
+  ggplot(aes(X, Y)) +
+  geom_point(size = 0.5) +
+  facet_wrap(~ z1 + z2, scales = "free") + 
+  geom_smooth(method = "lm", se = F, size = 0.5) +
+  geom_label(aes(x = x, y = y, label = cor), data = labels) +
+  theme_minimal() +
+  theme(strip.text = element_text(colour = "white", face = "bold")) +  
+  theme(strip.background = element_rect(colour = "white")) 
+
+```
+
+
+## Medida de Associação entre variáve
+
+
+```{r corgally, echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="90%"}
+base %>% select(-family, -sex, -nkids) %>% ggpairs()
+```
+
+## Relação entre correlação e $R^2$
+
+<div class = 'dado_full_width'>
+Para o caso de regressão linear simples, a correlação entre a variável resposta ($y$) e o valor ajustado pelo modelo ($\hat{y}$), quando elevado ao quadrado, é igual ao coeficiente de determinação.
+</div>
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source=c("watch-out", "dado_full_width"), out.width="75%"}
+## Correlação ao quadrado
+erro %>% select(height, ajustado) %>% cor %>% .^2
+
+## coeficiente de detarminação
+summary(modelo_linear)$r.squared
+```
+</div>
+
+
+## Melhorando o modelo (Blocagem, variáveis explicativas nominais)
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source= "watch-out", out.width="75%"}
+modelo_linear <- lm(height ~ mother + father + I(sex), data = base) 
+summary(modelo_linear)
+```
+</div>
+
+## Testando as hipóteses do modelo 2
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+erro  <- base %>% select(height, midHeight) %>% 
+  mutate(resíduos = resid(modelo_linear),
+         ajustado = fitted(modelo_linear))
+
+erro %>% head(n = 20) %>% kbl() %>% kable_classic_2() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>% 
+  kable_styling(full_width = FALSE, font_size = 10) %>% 
+  column_spec(3, color = if_else(erro$resíduos < 0, 'red', 'black'))
+```
+</div>
+
+## Testando as hipóteses do modelo 2
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+erro %>% 
+    ggplot(aes(x = resíduos, y = ..density..)) + geom_histogram(position = 'identity', color = 'white', bins = 30, fill = 'red', alpha = .2) +
+    geom_density(position = 'identity', size = .75) + theme_bw()
+```
+</div>
+
+## Testando as hipóteses do modelo 2
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+erro %>% pull(resíduos) %>% nortest::ad.test()
+```
+</div>
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+erro %>% ggplot() + geom_point(aes(x = ajustado, y = resíduos), alpha = .2) +
+  labs(x = "Ajustado", y = "Resíduos") + theme_bw()
+```
+</div>
+
+
+## Predito vs Valores verdadeiros
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+erro %>% ggplot() + 
+  geom_point(aes(x = ajustado, y = height), alpha = .2) +
+  labs(x = "Ajustado", y = "Real") + theme_bw()
+```
+
+## {.fullpage .grad}
+
+<div class="topic">
+Aplicação OLIST
+</div>
+
+## Problema
+
+> Como estimar o valor do frete? Que variáveis influenciam mais?
+
+**Dados**: https://github.com/olist/work-at-olist-data
+
+## {.fullpage .grad}
+
+<div class="topic">
+Regressão Logística
+</div>
+
+
+## Regressão Logística
+
+<div class = 'dado_full_width'>
+A **Função Logística** foi introduzida pelo matemático belga Pierre François Verhulst no meados do século 1800 como uma ferramenta para modelar crescimento populacional.
+</div>
+
+$$
+y = \frac{L}{1 + e^{-k(x - x_0)}}
+$$
+
+Em que $e$ é a constante exponencial (ou de Napier), $x_0$ é o valor de $x$ no ponto intermediário, $L$ é o máximo valor de $y$ (conhecido como 'capacidade de carga') e  $k$ é o máximo gradiente da curva. 
+
+## Função Logística
+
+<div class = 'dado_full_width'>
+A função logística é similar a distribuição normal acumulada, no entanto é mais fácil de interpretar.
+</div>
+
+```{r norm-log-curves, fig.align = "center", echo = TRUE, out.width = "75%"}
+library(ggplot2)
+ggplot2::ggplot() +
+  ggplot2::xlim(-5, 5) +
+  xlab("x") +
+  ylab("P (acumulada)") +
+  ggplot2::geom_function(aes(color = "Normal acumulada"), fun = pnorm,  linetype = "dashed") +
+  ggplot2::geom_function(aes(color = "Função Logística"), fun = plogis) + scale_color_discrete(name = "Curva")
+```
+
+## Regresssão Logística
+
+<div class = 'dado_full_width'>
+**Regressão Logística** pode ser usada quando a variável resposta é de natureza binária (dicotômica). Por exemplo, os valores podem ser um ou zero, verdadeiro ou falso, sim ou não, etc. Descrevemos estas classes como 'positiva' e 'negativa'.  
+
+<!-- Algums exemplos: -->
+
+<!-- - Dado um conjunto demográfico, renda e localizaçao,  qual a probabilidade do indivíduo votar na -->
+<!-- - A partir de um conjunto de dados sobre gerentes de vendas de uma organização, incluido performance em atingir metas, tamanho de equipe, tempo de organização e outros fatores, qual a influência destes fatores na chance do indivíduo  receber uma  nota de performance alta. -->
+
+
+A idéia é usa a função logística como nexo (*link*) entre um modelo linear e a probabilide da variável resposta ser de uma das classes, por exemplo, se $y$ pode assumir os valores $0$ e $1$, então: 
+
+$$
+P(y = 1) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 \cdot x)}}
+$$
+</div>
+
+Por definição $P(y = 1) + P(y = 0) = 1$, logo
+
+$$
+P(y = 0) = 1 - P(y = 1) = \frac{e^{-(\beta_0 + \beta_1\cdot x)}}{1 + e^{-(\beta_0 + \beta_1 \cdot x)}} 
+$$
+
+## Razão de Probabilidade
+
+<div class = 'dado_full_width'>
+A Razão de Probabilidade ou **Odds Ratio** é definida como a divisão entre as probabilidades das classes:
+
+$$
+\frac{P(y = 1)}{P(y = 0)} = e^{-(\beta_0 + \beta_1\cdot x)}
+$$
+
+
+$$
+\frac{P(y = 1)}{P(y = 0)} = \frac{\frac{1}{1 + e^{-(\beta_0 + \beta_1x)}}}{\frac{e^{-(\beta_0 + \beta_1x)}}{1 + e^{-(\beta_0 + \beta_1x)}}} = \frac{1}{e^{-(\beta_0 + \beta_1x)}} = e^{\beta_0 + \beta_1x}
+$$
+
+Aplicando o **logaritmo** em ambos os lados da equação, temos:
+
+$$
+\ln\left(\frac{P(y = 1)}{P(y = 0)}\right) = \beta_0 + \beta_1\cdot x
+$$ 
+
+Portanto, podemos concluir que o logaritmo natural da **razão de probabilidade** de $y$ --- abreviado *log odds* de $y$ --- é linear em $x$, podendo ser modelado usando o método de **regressão linear**.
+</div>
+
+
+## Exemplo
+
+<div class = 'dado_full_width'>
+Considere os dados abaixo
+</div>
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+
+salespeople <- read_csv("data/salespeople.csv")
+
+
+salespeople %>% head(n = 20) %>% kbl() %>% kable_classic_2() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>% 
+  kable_styling(full_width = FALSE, font_size = 10)
+```
+</div>
+
+## Exemplo
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, fig.width=5, fig.height=5, message=FALSE, warning=FALSE, class.source="watch-out"}
+salespeople <- read_csv("data/salespeople.csv")
+salespeople_clean <- salespeople %>% 
+  mutate(promoted = factor(promoted),
+         performance = factor(performance, levels = 1:4, ordered = TRUE)) %>% na.omit 
+ggpairs(salespeople_clean, ggplot2::aes(colour=promoted)) 
+```
+</div>
+
+## Exemplo: Organizando os dados
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+
+# Criar variáveis indicadoras
+salespeople_ind  <- salespeople_clean %>% 
+  dummy_cols(select_columns = "performance") %>%
+  select(-performance)
+
+
+salespeople_ind %>% head(n = 20) %>% kbl() %>% kable_classic_2() %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>% 
+  kable_styling(full_width = FALSE, font_size = 10)
+```
+</div>
+
+## Exemplo: Primeiro Modelo
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+modelo_completo <- 
+  glm(formula = "promoted ~ .", family = "binomial", 
+      data = salespeople_ind)
+
+coeficientes <- tidy(modelo_completo) %>% 
+  mutate(odds = exp(estimate),
+         `2.5%` = exp(confint(modelo_completo))[,"2.5 %"],
+         `97.5%` = exp(confint(modelo_completo))[,"97.5 %"])  
+coeficientes %>% 
+    mutate(across(where(is.numeric), ~ round(.x, 3))) %>% 
+    kbl() %>% kable_classic_2() %>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>% 
+    kable_styling(full_width = FALSE, font_size = 10) %>% 
+    column_spec(c(2:6), color = if_else(c(na.omit(coeficientes)$estimate < 0, TRUE), 'red', 'black'))
+```
+</div>
+
+## Exemplo: Primeiro Modelo --- continuação
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+summary(modelo_completo)
+```
+</div>
+
+
+## Exemplo: Segundo Modelo
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+modelo_simples <- 
+  glm(formula = "promoted ~ sales + customer_rate", family = "binomial", 
+      data = salespeople_ind)
+
+coeficientes <- tidy(modelo_simples) %>% 
+  mutate(odds = exp(estimate),
+         `2.5%` = exp(confint(modelo_simples))[,"2.5 %"],
+         `97.5%` = exp(confint(modelo_simples))[,"97.5 %"])  
+coeficientes %>% 
+    mutate(across(where(is.numeric), ~ round(.x, 3))) %>% 
+    kbl() %>% kable_classic_2() %>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>% 
+    kable_styling(full_width = FALSE, font_size = 10) %>% 
+    column_spec(c(2:6), color = if_else(c(na.omit(coeficientes)$estimate < 0, TRUE), 'red', 'black'))
+```
+</div>
+
+## Exemplo: Segundo Modelo --- continuação
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+summary(modelo_simples)
+```
+</div>
+
+
+## Qualidade do ajuste
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+pseudoR2 <- tibble(PseudoR2 = c("McFadden", "CoxSnell", "Nagelkerke", "Tjur"),
+                  Valor = DescTools::PseudoR2(modelo_simples, which = PseudoR2))  
+
+pseudoR2 %>% mutate(across(where(is.numeric), ~ round(.x, 2))) %>% 
+  kbl() %>% kable_classic_2() %>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>% 
+    kable_styling(full_width = FALSE, font_size = 10) 
+
+diagnostics <- LogisticDx::gof(modelo_simples, plotROC = FALSE)  
+  
+diagnostics$gof %>% as_tibble() %>% 
+  kbl() %>% kable_classic_2() %>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>% 
+    kable_styling(full_width = FALSE, font_size = 10) %>% 
+    column_spec(5, color = if_else(diagnostics$gof$pVal < .05, 'red', 'black'))
+```
+</div>
+
+## Previsão de novos dados
+
+<div class = 'dado_full_width'>
+```{r echo=TRUE, message=FALSE, warning=FALSE, class.source="watch-out", out.width="75%"}
+novos_dados <- tibble(sales = c(420, 510, 710), 
+                        customer_rate = c(3.4, 2.3, 4.2))
+
+previsão <- predict(modelo_simples, novos_dados, type = "response")
+
+novos_dados %>% 
+  mutate(Resposta = round(previsão, 2)) %>% 
+  kbl() %>% kable_classic_2() %>%
+    kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>% 
+    kable_styling(full_width = FALSE, font_size = 10)
+```
+</div>
+
+## {.fullpage .grad}
+
+<div class="topic">
+Aplicação OLIST
+</div>
+
+<div class = 'dado_full_width'>
+</div>
+
+
+## Problema
+
+> Como prever a satisfação do consumidor? Que variáveis influenciam mais?
+
+**Dados**: https://github.com/olist/work-at-olist-data
